@@ -19,13 +19,19 @@ const Header = () => {
 	};
 
 	const enableMetamask = async () => {
-		try {
-			// Request account access if needed
-			const accounts = await window.ethereum.send("eth_requestAccounts");
-			setMetamask(true);
-			console.log("Metamask enabled", accounts);
-		} catch (error) {
-			console.log(error);
+		if (window.ethereum) {
+			try {
+				// Request account access if needed
+				const accounts = await window.ethereum.send(
+					"eth_requestAccounts"
+				);
+				setMetamask(true);
+				// eslint-disable-next-line no-console
+				console.log("Metamask enabled", accounts);
+			} catch (error) {
+				// eslint-disable-next-line no-console
+				console.log(error);
+			}
 		}
 	};
 

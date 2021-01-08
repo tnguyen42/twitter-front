@@ -2,6 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
 
+import smartContract from "services/smartContract.js";
+import { web3 } from "services/smartContract";
+
 const moment = require("moment");
 
 const Tweet = ({ author, content, timestamp, id, account }) => {
@@ -9,8 +12,9 @@ const Tweet = ({ author, content, timestamp, id, account }) => {
 		console.log("Edit");
 	};
 
-	const handleDelete = () => {
-		console.log("Delete");
+	const handleDelete = async () => {
+		const userAccount = await web3.eth.getAccounts();
+		smartContract.methods.deleteTweet(id).send({ from: userAccount[0] });
 	};
 
 	return (
