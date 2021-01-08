@@ -1,6 +1,6 @@
 import React from "react";
-import Header from "src/Header.js";
-import Content from "src/Content.js";
+import Header from "components/Header";
+import Content from "components/Content";
 
 function App() {
 	return (

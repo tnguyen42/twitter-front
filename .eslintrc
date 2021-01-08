@@ -15,7 +15,8 @@
 		"react-hooks/rules-of-hooks": "error",
 		"react-hooks/exhaustive-deps": "warn",
 		"react/no-array-index-key": "warn",
-		"jsx-a11y/anchor-is-valid": 0
+		"jsx-a11y/anchor-is-valid": 0,
+		"no-unused-vars": "warn"
 	},
 	"env": {
 		"es6": true,
@@ -35,7 +36,7 @@
 		},
 		"import/resolver": {
 			"node": {
-				"paths": ["./"]
+				"paths": ["./src"]
 			}
 		}
 	}
