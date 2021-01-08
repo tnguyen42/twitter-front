@@ -24,22 +24,26 @@ const Header = () => {
 					handleSubmit(tweet);
 				}}
 			>
-				<TextField
-					id="outlined-basic"
-					label="Your tweet"
-					variant="outlined"
-					multiline
-					className="w-4/6"
-					onChange={handleChange}
-				/>
-				<Button
-					variant="contained"
-					color="primary"
-					className="pl-2 w-1/6 h-14"
-					type="submit"
-				>
-					Tweet
-				</Button>
+				<div className="w-5/6 pr-1">
+					<TextField
+						id="outlined-basic"
+						label="Your tweet"
+						variant="outlined"
+						className="w-full"
+						multiline
+						onChange={handleChange}
+					/>
+				</div>
+				<div className="pl-1 w-1/6 h-14">
+					<Button
+						variant="contained"
+						color="primary"
+						className="w-full h-full"
+						type="submit"
+					>
+						Tweet
+					</Button>
+				</div>
 			</form>
 		</div>
 	);
