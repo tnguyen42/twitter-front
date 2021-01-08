@@ -1,0 +1,42 @@
+{
+	"parser": "babel-eslint",
+	"extends": [
+		"eslint:recommended",
+		"plugin:import/errors",
+		"plugin:react/recommended",
+		"plugin:jsx-a11y/recommended",
+		"prettier",
+		"prettier/react"
+	],
+	"plugins": ["import", "react", "jsx-a11y", "react-hooks"],
+	"rules": {
+		"react/prop-types": "warn",
+		"no-console": "warn",
+		"react-hooks/rules-of-hooks": "error",
+		"react-hooks/exhaustive-deps": "warn",
+		"react/no-array-index-key": "warn",
+		"jsx-a11y/anchor-is-valid": 0
+	},
+	"env": {
+		"es6": true,
+		"browser": true,
+		"node": true
+	},
+	"parserOptions": {
+		"ecmaVersion": 2020,
+		"sourceType": "module",
+		"ecmaFeatures": {
+			"jsx": true
+		}
+	},
+	"settings": {
+		"react": {
+			"version": "detect"
+		},
+		"import/resolver": {
+			"node": {
+				"paths": ["./"]
+			}
+		}
+	}
+}
