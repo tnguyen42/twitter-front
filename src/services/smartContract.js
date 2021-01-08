@@ -1,7 +1,7 @@
 import abi from "./abi";
 
 let Web3 = require("web3");
-const address = "0xBA50Dd0EE532Ce1fc23CBc5d685DBbD1b3a7A0A6";
+export const address = "0xBA50Dd0EE532Ce1fc23CBc5d685DBbD1b3a7A0A6";
 
 export const web3 = new Web3(
 	window.ethereum ||

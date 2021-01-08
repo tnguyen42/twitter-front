@@ -18,7 +18,6 @@ const Content = () => {
 				id: response[3][i],
 			});
 		}
-		// console.log(newTweets);
 		setTweets(newTweets);
 	};
 
@@ -27,7 +26,20 @@ const Content = () => {
 	}, []);
 
 	useEffect(() => {
+		// Initial tweet getting
 		smartContract.methods.getTweets().call().then(updateTweets);
+
+		let subscription = web3.eth.subscribe("newBlockHeaders", (error) => {
+			if (!error) {
+				smartContract.methods.getTweets().call().then(updateTweets);
+			}
+		});
+
+		return subscription.unsubscribe((error, success) => {
+			if (success) {
+				console.log("Successfully unsubscribed");
+			}
+		});
 	}, []);
 
 	return (
