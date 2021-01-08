@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
+import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
+
+const moment = require("moment");
 
 const Tweet = ({ author, content, timestamp, id, account }) => {
 	const handleEdit = () => {
@@ -16,7 +19,9 @@ const Tweet = ({ author, content, timestamp, id, account }) => {
 				<div className="flex flex-row content-center justify-center">
 					<div className="font-bold break-all">{author}</div>
 					<div className="px-1">·</div>
-					<div className="text-gray-600">{timestamp}</div>
+					<div className="text-gray-600">
+						{moment.unix(timestamp).fromNow()}
+					</div>
 				</div>
 			</div>
 			<div className="mt-2">{content}</div>
@@ -32,6 +37,14 @@ const Tweet = ({ author, content, timestamp, id, account }) => {
 			)}
 		</div>
 	);
+};
+
+Tweet.propTypes = {
+	author: PropTypes.string.isRequired,
+	content: PropTypes.string.isRequired,
+	timestamp: PropTypes.string.isRequired,
+	id: PropTypes.string.isRequired,
+	account: PropTypes.string.isRequired,
 };
 
 export default Tweet;
