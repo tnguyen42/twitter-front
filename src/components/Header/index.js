@@ -7,44 +7,40 @@ import { web3 } from "services/smartContract";
 
 const Header = () => {
 	const [tweet, setTweet] = useState("");
-	const [metamask, setMetamask] = useState(false);
+	const [error, setError] = useState(null);
 
 	const handleChange = (event) => {
 		setTweet(event.target.value);
 	};
 
 	const handleSubmit = async (tweet) => {
-		const userAccount = await web3.eth.getAccounts();
-		smartContract.methods.createTweet(tweet).send({ from: userAccount[0] });
-	};
+		let accounts;
 
-	const enableMetamask = async () => {
 		if (window.ethereum) {
 			try {
 				// Request account access if needed
-				const accounts = await window.ethereum.send(
-					"eth_requestAccounts"
-				);
-				setMetamask(true);
+				accounts = await window.ethereum.send("eth_requestAccounts");
 				// eslint-disable-next-line no-console
 				console.log("Metamask enabled", accounts);
+				setError(null);
 			} catch (error) {
-				// eslint-disable-next-line no-console
-				console.log(error);
+				setError("Unable to connect to Metamask");
 			}
+		}
+
+		if (accounts) {
+			const userAccount = await web3.eth.getAccounts();
+			smartContract.methods
+				.createTweet(tweet)
+				.send({ from: userAccount[0] });
+			setError(null);
+		} else {
+			setError("You are not connected to Metamask");
 		}
 	};
 
 	return (
-		<div className="mt-10">
-			<Button
-				variant="contained"
-				className="w-full"
-				onClick={enableMetamask}
-				disabled={metamask}
-			>
-				Allow Metamask
-			</Button>
+		<div>
 			<form
 				noValidate
 				autoComplete="off"
@@ -75,6 +71,7 @@ const Header = () => {
 					</Button>
 				</div>
 			</form>
+			{error && <div className="text-red-600 font-bold">{error}</div>}
 		</div>
 	);
 };
