@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
+
+import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 
 import smartContract from "services/smartContract.js";
@@ -8,8 +10,15 @@ import { web3 } from "services/smartContract";
 const moment = require("moment");
 
 const Tweet = ({ author, content, timestamp, id, account }) => {
+	const [edit, setEdit] = useState(false);
+	const [tweet, setTweet] = useState("");
+
 	const handleEdit = () => {
-		console.log("Edit", id);
+		if (!edit) {
+			setEdit(true);
+		} else {
+			setEdit(false);
+		}
 	};
 
 	const handleDelete = async () => {
@@ -24,6 +33,20 @@ const Tweet = ({ author, content, timestamp, id, account }) => {
 		}
 	};
 
+	const handleChange = (event) => {
+		setTweet(event.target.value);
+	};
+
+	const handleSubmit = async () => {
+		const userAccount = await web3.eth.getAccounts();
+		smartContract.methods
+			.updateTweet(id, tweet)
+			.send({ from: userAccount[0] })
+			.then(() => {
+				setEdit(false);
+			});
+	};
+
 	return (
 		<div className="border p-3 hover:bg-gray-100">
 			<div className="flex flex-row justify-between">
@@ -36,6 +59,49 @@ const Tweet = ({ author, content, timestamp, id, account }) => {
 				</div>
 			</div>
 			<div className="mt-2">{content}</div>
+			{edit && (
+				<form
+					noValidate
+					autoComplete="off"
+					className="w-full flex justify-between mt-3"
+					onSubmit={(event) => {
+						event.preventDefault();
+						handleSubmit(tweet);
+					}}
+				>
+					<div className="w-4/6 pr-1">
+						<TextField
+							id="outlined-basic"
+							label="Your updated tweet"
+							variant="outlined"
+							className="w-full"
+							multiline
+							onChange={handleChange}
+						/>
+					</div>
+					<div className="pl-1 w-1/6 h-14">
+						<Button
+							variant="contained"
+							className="w-full h-full"
+							onClick={() => {
+								setEdit(false);
+							}}
+						>
+							Cancel
+						</Button>
+					</div>
+					<div className="pl-1 w-1/6 h-14">
+						<Button
+							variant="contained"
+							color="primary"
+							className="w-full h-full"
+							type="submit"
+						>
+							Update
+						</Button>
+					</div>
+				</form>
+			)}
 			{author == account && (
 				<div className="flex flex-row justify-end mt-2">
 					<Button variant="contained" onClick={handleEdit}>
