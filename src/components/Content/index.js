@@ -10,7 +10,7 @@ const Content = () => {
 
 	const updateTweets = (response) => {
 		let newTweets = [];
-		for (let i = 0; i < response[0].length; i++) {
+		for (let i = response[0].length - 1; i >= 0; i--) {
 			newTweets.push({
 				author: response[0][i],
 				content: response[1][i],
@@ -23,6 +23,14 @@ const Content = () => {
 
 	useEffect(() => {
 		web3.eth.getAccounts().then(setAccount);
+
+		async function listenMMAccount() {
+			window.ethereum.on("accountsChanged", async function () {
+				const accounts = await web3.eth.getAccounts();
+				setAccount(accounts);
+			});
+		}
+		listenMMAccount();
 	}, []);
 
 	useEffect(() => {

@@ -9,12 +9,19 @@ const moment = require("moment");
 
 const Tweet = ({ author, content, timestamp, id, account }) => {
 	const handleEdit = () => {
-		console.log("Edit");
+		console.log("Edit", id);
 	};
 
 	const handleDelete = async () => {
-		const userAccount = await web3.eth.getAccounts();
-		smartContract.methods.deleteTweet(id).send({ from: userAccount[0] });
+		console.log("Delete", id);
+		try {
+			const userAccount = await web3.eth.getAccounts();
+			smartContract.methods
+				.deleteTweet(id)
+				.send({ from: userAccount[0] });
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	return (
