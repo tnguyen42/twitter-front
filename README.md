@@ -19,3 +19,4 @@ To build a production version:
 ## Notes
 
 -   There are no unit tests available (yet).
+-   There is no Docker implementation yet.
