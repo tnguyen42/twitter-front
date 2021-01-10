@@ -12,6 +12,7 @@ const moment = require("moment");
 const Tweet = ({ author, content, timestamp, id, account }) => {
 	const [edit, setEdit] = useState(false);
 	const [tweet, setTweet] = useState("");
+	const [error, setError] = useState(null);
 
 	const handleEdit = () => {
 		if (!edit) {
@@ -22,14 +23,13 @@ const Tweet = ({ author, content, timestamp, id, account }) => {
 	};
 
 	const handleDelete = async () => {
-		console.log("Delete", id);
 		try {
 			const userAccount = await web3.eth.getAccounts();
 			smartContract.methods
 				.deleteTweet(id)
 				.send({ from: userAccount[0] });
 		} catch (error) {
-			console.log(error);
+			setError("Something went wrong. Please try again.");
 		}
 	};
 
@@ -104,7 +104,11 @@ const Tweet = ({ author, content, timestamp, id, account }) => {
 			)}
 			{author == account && (
 				<div className="flex flex-row justify-end mt-2">
-					<Button variant="contained" onClick={handleEdit}>
+					<Button
+						variant="contained"
+						onClick={handleEdit}
+						disabled={edit}
+					>
 						Edit
 					</Button>
 					<Button variant="contained" onClick={handleDelete}>
@@ -112,6 +116,7 @@ const Tweet = ({ author, content, timestamp, id, account }) => {
 					</Button>
 				</div>
 			)}
+			{error && <div className="text-red-600 font-bold">{error}</div>}
 		</div>
 	);
 };
@@ -121,7 +126,7 @@ Tweet.propTypes = {
 	content: PropTypes.string.isRequired,
 	timestamp: PropTypes.string.isRequired,
 	id: PropTypes.string.isRequired,
-	account: PropTypes.string.isRequired,
+	account: PropTypes.string,
 };
 
 export default Tweet;

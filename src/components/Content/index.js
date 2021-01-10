@@ -25,10 +25,12 @@ const Content = () => {
 		web3.eth.getAccounts().then(setAccount);
 
 		async function listenMMAccount() {
-			window.ethereum.on("accountsChanged", async function () {
-				const accounts = await web3.eth.getAccounts();
-				setAccount(accounts);
-			});
+			if (window.ethereum) {
+				window.ethereum.on("accountsChanged", async function () {
+					const accounts = await web3.eth.getAccounts();
+					setAccount(accounts);
+				});
+			}
 		}
 		listenMMAccount();
 	}, []);

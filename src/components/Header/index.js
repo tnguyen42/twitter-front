@@ -1,53 +1,73 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 
 import smartContract from "services/smartContract.js";
-import { web3 } from "services/smartContract";
-import Web3 from "web3";
 
 const Header = () => {
 	const [tweet, setTweet] = useState("");
 	const [error, setError] = useState(null);
+	const [currentAccount, setCurrentAccount] = useState(null);
 
 	const handleChange = (event) => {
 		setTweet(event.target.value);
 	};
 
-	const handleSubmit = async (tweet) => {
-		let accounts;
-
-		// if (window.ethereum) {
-		// 	try {
-		// 		// Request account access if needed
-		// 		accounts = window.ethereum.sendAsync("eth_requestAccounts");
-		// 		// eslint-disable-next-line no-console
-		// 		console.log("Metamask enabled", accounts);
-		// 		setError(null);
-		// 	} catch (error) {
-		// 		setError("Unable to connect to Metamask");
-		// 	}
-		// }
-
+	useEffect(() => {
 		if (window.ethereum) {
-			window.web3 = new Web3(window.ethereum);
-			window.ethereum.enable();
-			accounts = true;
+			window.ethereum
+				.request({ method: "eth_accounts" })
+				.then(handleAccountsChanged)
+				.catch((err) => {
+					// eslint-disable-next-line no-console
+					console.error(err);
+				});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
-		if (accounts) {
-			const userAccount = await web3.eth.getAccounts();
-			smartContract.methods
-				.createTweet(tweet)
-				.send({ from: userAccount[0] });
-			setError(null);
-		} else {
-			setError("You are not connected to Metamask");
+	const handleAccountsChanged = (accounts) => {
+		if (accounts.length === 0) {
+			setError("Please connect to Metamask");
+			setCurrentAccount(null);
+		} else if (accounts[0] !== currentAccount) {
+			setCurrentAccount(accounts[0]);
 		}
+	};
+
+	const enableMetamask = async () => {
+		if (window.ethereum) {
+			window.ethereum
+				.request({ method: "eth_requestAccounts" })
+				.then((response) => {
+					handleAccountsChanged(response);
+					setError(null);
+				})
+				.catch((err) => {
+					if (err.code === 40001) {
+						setError("Please connect to Metamask");
+					} else {
+						setError(err);
+					}
+				});
+		}
+	};
+
+	const handleSubmit = async (tweet) => {
+		smartContract.methods.createTweet(tweet).send({ from: currentAccount });
+		setError(null);
 	};
 
 	return (
 		<div>
+			<Button
+				variant="contained"
+				className="w-full"
+				onClick={enableMetamask}
+				disabled={currentAccount !== null}
+			>
+				Enable Metamask
+			</Button>
 			<form
 				noValidate
 				autoComplete="off"
@@ -73,6 +93,7 @@ const Header = () => {
 						color="primary"
 						className="w-full h-full"
 						type="submit"
+						disabled={currentAccount === null}
 					>
 						Tweet
 					</Button>
