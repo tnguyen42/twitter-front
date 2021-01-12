@@ -10,7 +10,7 @@ export const web3 = new Web3(
 		)
 );
 
-window.ethereum.autoRefreshOnNetworkChange = false;
+if (window.ethereum) window.ethereum.autoRefreshOnNetworkChange = false;
 
 const smartContract = new web3.eth.Contract(abi, address);
 
