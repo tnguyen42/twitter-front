@@ -50,6 +50,8 @@ const Header = () => {
 						setError(err);
 					}
 				});
+		} else {
+			setError("Your browser does not seem compatible with Ethereum.");
 		}
 	};
 
