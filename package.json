@@ -24,7 +24,8 @@
 		"start": "craco start",
 		"build": "craco build",
 		"test": "craco test",
-		"eject": "react-scripts eject"
+		"eject": "react-scripts eject",
+		"deploy": "aws s3 sync build/ s3://twitterclone.co --acl public-read --profile nguyen.tq@hotmail.fr"
 	},
 	"eslintConfig": {
 		"extends": [
